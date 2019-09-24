@@ -1,0 +1,27 @@
+.header {
+  margin-bottom: 5rem;
+
+  @media only screen and (min-width: 768px) {
+    margin-bottom: 8rem;
+  }
+  @media only screen and (min-width: 1440px) {
+    margin-bottom: 10rem;
+  }
+}
+.wrapper {
+  margin-bottom: 2rem;
+}
+
+.title {
+  font-weight: 600 !important;
+}
+
+.paragraph {
+  font-weight: 100 !important;
+}
+
+.appBar {
+  background: rgb(247, 247, 247) !important;
+  color: black !important;
+  box-shadow: none !important;
+}
