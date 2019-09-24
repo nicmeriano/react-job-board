@@ -1,18 +1,17 @@
-// example of async handler using async-await
-// https://github.com/netlify/netlify-lambda/issues/43#issuecomment-444618311
-
+// import fetchGithub from "../api/Github";
 import fetch from "node-fetch";
 
 export async function handler(event) {
   try {
-    const { searchTerm, location } = event.queryStringParameters || {};
-    console.log("searching: ", { searchTerm, location });
-    const allJobs = await fetchGithub(searchTerm, location);
+    const { searchTerm, location, page } = event.queryStringParameters || {};
+    console.log("searching: ", { searchTerm, location, page });
+    const allJobs = await fetchGithub(searchTerm, location, page);
 
     return {
       statusCode: 200,
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ jobs: allJobs })
+      body: JSON.stringify(allJobs)
+      // body: JSON.stringify({ jobs: allJobs })
     };
   } catch (err) {
     console.log(err); // output to netlify function log
@@ -23,7 +22,7 @@ export async function handler(event) {
   }
 }
 
-async function fetchGithub(searchTerm, location) {
+async function fetchGithub(searchTerm, location, page) {
   const query = searchTerm
     .trim()
     .toLowerCase()
@@ -39,7 +38,7 @@ async function fetchGithub(searchTerm, location) {
     .join("+");
 
   const baseURL = `https://jobs.github.com/positions.json?description=${query}&location=${loc}`;
-  console.log({ query, loc, baseURL });
+  console.log({ query, loc, baseURL, page });
 
   let resultCount = 1;
   let currentPage = 0;
@@ -48,29 +47,33 @@ async function fetchGithub(searchTerm, location) {
 
   // fetch all jobs from all pages
   console.log("Fetching Github...");
-  while (resultCount > 0) {
-    const res = await fetch(`${baseURL}&page=${currentPage}`);
-    const jobs = await res.json();
-    allJobs.push(...jobs);
-    resultCount = jobs.length;
-    currentPage++;
-    console.log(`page: ${currentPage}, got ${resultCount} jobs`);
-  }
+  // while (resultCount > 0) {
+  //   const res = await fetch(`${baseURL}&page=${currentPage}`);
+  //   const jobs = await res.json();
+  //   allJobs.push(...jobs);
+  //   resultCount = jobs.length;
+  //   currentPage++;
+  //   console.log(`page: ${currentPage}, got ${resultCount} jobs`);
+  // }
 
+  const res = await fetch(`${baseURL}&page=${page}`);
+  const jobs = await res.json();
+  allJobs.push(...jobs);
   console.log(`got a total of ${allJobs.length} jobs (UNFILTERED)`);
 
   // filter algorithm
-  const jrJobs = allJobs.filter(job => {
-    const jobTitle = job.title.toLowerCase();
-    const isSenior = jobTitle.includes("sr.") || jobTitle.includes("senior");
-    const isManager = jobTitle.includes("manager");
-    const isArchitect = jobTitle.includes("architect");
+  // const jrJobs = allJobs.filter(job => {
+  //   const jobTitle = job.title.toLowerCase();
+  //   const isSenior = jobTitle.includes("sr.") || jobTitle.includes("senior");
+  //   const isManager = jobTitle.includes("manager");
+  //   const isArchitect = jobTitle.includes("architect");
 
-    if (isSenior || isManager || isArchitect) {
-      return false;
-    }
-    return true;
-  });
+  //   if (isSenior || isManager || isArchitect) {
+  //     return false;
+  //   }
+  //   return true;
+  // });
+  const jrJobs = allJobs; //temp
 
   // sort by date
   const monthMap = {

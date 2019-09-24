@@ -1,45 +1,23 @@
-import React, { useState, useEffect } from "react";
-import Header from "./components/Header";
-import SearchBar from "./components/SearchBar";
-import JobList from "./components/JobList";
-import Loader from "./components/Loader";
-import { Container } from "@material-ui/core";
+import React from "react";
+import Results from "./components/Results";
+import Job from "./components/Job";
+import Loading from "./components/Loading";
+
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "./App.css";
 
-async function fetchJobs(searchTerm, location, loading) {
-  loading(true);
-  const LAMBDA_API = `/.netlify/functions/async-jobs?searchTerm=${searchTerm}&location=${location}`;
-  const res = await fetch(LAMBDA_API);
-  let data;
-  try {
-    data = await res.json();
-  } catch (e) {
-    data = { jobs: [] };
-  }
-  loading(false);
-  return data.jobs;
-}
-
-function App() {
-  const [jobList, updateJobs] = useState([]);
-  const [searchTerm, updateSearchTerm] = useState("");
-  const [location, updateLocation] = useState("");
-  const [isLoading, updateLoading] = useState(true);
-
-  useEffect(() => {
-    fetchJobs(searchTerm, location, updateLoading).then(updateJobs);
-  }, [searchTerm, location]);
-
+export default function App() {
   return (
-    <Container maxWidth="lg">
-      <Header />
-      <SearchBar
-        updateSearchTerm={updateSearchTerm}
-        updateLocation={updateLocation}
-      />
-      {isLoading ? <Loader /> : <JobList jobs={jobList} />}
-    </Container>
+    <Router>
+      <div className="container">
+        <React.Suspense fallback={<Loading />}>
+          <Switch>
+            <Route exact path="/" component={Results} />
+            <Route path="/search" component={Job} />
+            <Route render={() => <h1>404</h1>} />
+          </Switch>
+        </React.Suspense>
+      </div>
+    </Router>
   );
 }
-
-export default App;

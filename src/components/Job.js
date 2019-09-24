@@ -1,25 +1,22 @@
 import React from "react";
-import { Paper, Typography } from "@material-ui/core";
-import style from "./Job.module.scss";
+import queryString from "query-string";
+import fetchJob from "../api/FetchJobInfo";
 
-function Job({ job, onClick }) {
-  return (
-    <Paper onClick={onClick} className={style.job}>
-      <div className={style.info}>
-        <Typography variant="h5">{job.title}</Typography>
-        <Typography variant="h6">{job.company}</Typography>
-        <Typography>{job.location}</Typography>
-      </div>
-      <div className={style.date}>
-        <Typography>
-          {job.created_at
-            .split(" ")
-            .slice(0, 3)
-            .join(" ")}
-        </Typography>
-      </div>
-    </Paper>
-  );
+export default class Job extends React.Component {
+  state = {
+    job: null
+  };
+
+  componentDidMount() {
+    const { id } = queryString.parse(this.props.location.search);
+    fetchJob(id).then(job => {
+      this.setState({ job });
+    });
+  }
+
+  render() {
+    return (
+      <pre>{this.state.job && JSON.stringify(this.state.job, null, 2)}</pre>
+    );
+  }
 }
-
-export default Job;

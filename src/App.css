@@ -11,3 +11,14 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+.job {
+  border: 2px solid gray;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.job:hover {
+  color: red;
+}
