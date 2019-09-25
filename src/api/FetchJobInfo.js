@@ -4,9 +4,8 @@ export default async function fetchJobInfo(id) {
   let data;
   try {
     data = await res.json();
-  } catch (e) {
-    console.log(e.message);
-    console.log("FETCHJOBINFO.JS");
+  } catch ({ message }) {
+    throw new Error(message);
   }
 
   return data;

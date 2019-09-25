@@ -1,128 +1,20 @@
-// import fetchGithub from "../api/Github";
-import fetch from "node-fetch";
+import fetchGithub from '../utils/fetchGithub';
 
-export async function handler(event) {
+exports.handler = async function(event) {
   try {
-    const { searchTerm, location, page } = event.queryStringParameters || {};
-    console.log("searching: ", { searchTerm, location, page });
-    const allJobs = await fetchGithub(searchTerm, location, page);
+    const searchParams = event.queryStringParameters || {};
+    const allJobs = await fetchGithub(searchParams);
 
     return {
       statusCode: 200,
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify(allJobs)
-      // body: JSON.stringify({ jobs: allJobs })
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(allJobs),
     };
-  } catch (err) {
-    console.log(err); // output to netlify function log
+  } catch ({ message }) {
+    console.log(message);
     return {
       statusCode: 500,
-      body: JSON.stringify({ msg: err.message }) // Could be a custom message or object i.e. JSON.stringify(err)
+      body: JSON.stringify({ msg: message }),
     };
   }
-}
-
-async function fetchGithub(searchTerm, location, page) {
-  const query = searchTerm
-    .trim()
-    .toLowerCase()
-    .split(" ")
-    .filter(word => word.length > 1)
-    .join("+");
-
-  const loc = location
-    .trim()
-    .toLowerCase()
-    .split(" ")
-    .filter(word => word.length > 1)
-    .join("+");
-
-  const baseURL = `https://jobs.github.com/positions.json?description=${query}&location=${loc}`;
-  console.log({ query, loc, baseURL, page });
-
-  let resultCount = 1;
-  let currentPage = 0;
-
-  const allJobs = [];
-
-  // fetch all jobs from all pages
-  console.log("Fetching Github...");
-  // while (resultCount > 0) {
-  //   const res = await fetch(`${baseURL}&page=${currentPage}`);
-  //   const jobs = await res.json();
-  //   allJobs.push(...jobs);
-  //   resultCount = jobs.length;
-  //   currentPage++;
-  //   console.log(`page: ${currentPage}, got ${resultCount} jobs`);
-  // }
-
-  const res = await fetch(`${baseURL}&page=${page}`);
-  const jobs = await res.json();
-  allJobs.push(...jobs);
-  console.log(`got a total of ${allJobs.length} jobs (UNFILTERED)`);
-
-  // filter algorithm
-  // const jrJobs = allJobs.filter(job => {
-  //   const jobTitle = job.title.toLowerCase();
-  //   const isSenior = jobTitle.includes("sr.") || jobTitle.includes("senior");
-  //   const isManager = jobTitle.includes("manager");
-  //   const isArchitect = jobTitle.includes("architect");
-
-  //   if (isSenior || isManager || isArchitect) {
-  //     return false;
-  //   }
-  //   return true;
-  // });
-  const jrJobs = allJobs; //temp
-
-  // sort by date
-  const monthMap = {
-    Jan: "01",
-    Feb: "02",
-    Mar: "03",
-    Apr: "04",
-    May: "05",
-    Jun: "06",
-    Jul: "07",
-    Aug: "08",
-    Sep: "09",
-    Oct: "10",
-    Nov: "11",
-    Dec: "12"
-  };
-  const sortedJobs = jrJobs.sort((a, b) => {
-    let splitDateA = a.created_at.split(" ").splice(1);
-    let splitDateB = b.created_at.split(" ").splice(1);
-    let [monthA, dayA, , , yearA] = splitDateA;
-    let [monthB, dayB, , , yearB] = splitDateB;
-    let dateA = new Date(`${yearA}-${monthMap[monthA]}-${dayA}Z`);
-    let dateB = new Date(`${yearB}-${monthMap[monthB]}-${dayB}Z`);
-
-    if (dateA < dateB) {
-      return 1;
-    } else {
-      return -1;
-    }
-  });
-
-  // remove duplicates
-
-  function removeDuplicatesBy(keyFn, array) {
-    let mySet = new Set();
-    return array.filter(el => {
-      let key = keyFn(el);
-      let isNew = !mySet.has(key);
-      if (isNew) {
-        mySet.add(key);
-      }
-      return isNew;
-    });
-  }
-
-  const sortedUniqueJobs = removeDuplicatesBy(job => job.id, sortedJobs);
-
-  console.log(`got a total of ${sortedUniqueJobs.length} jobs (FILTERED)`);
-
-  console.log("fetching complete");
-  return sortedUniqueJobs;
-}
+};

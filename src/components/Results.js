@@ -1,53 +1,113 @@
-import React from "react";
-import fetchJobs from "../api/FetchJobs";
-import JobPreview from "../components/JobPreview";
+import React from 'react';
+import PropTypes from 'prop-types';
+import JobPreview from './JobPreview';
+import SearchBar from './SearchBar';
+import fetchJobs from '../api/FetchJobs';
 
-class SearchBar extends React.Component {
-  state = {
-    searchTerm: "",
-    location: "",
-    //test
-    page: 1
+export default class Results extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      searchParams: {
+        searchTerm: '',
+        location: '',
+        page: 1,
+      },
+      jobs: {},
+      loading: false,
+      moreJobs: true,
+    };
+  }
+
+  componentDidMount() {
+    const { searchParams } = this.state;
+    window.addEventListener('scroll', this.handleOnScroll);
+    this.updateJobs(searchParams);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this.handleOnScroll);
+  }
+
+  handleOnScroll = () => {
+    const { loading, moreJobs } = this.state;
+    if (window.innerHeight + window.scrollY >= document.body.offsetHeight && !loading && moreJobs) {
+      this.loadMoreJobs();
+    }
   };
 
-  handleChange = (event, id) => {
+  updateJobs = params => {
+    const { searchTerm, location } = params;
+    const { jobs } = this.state;
+    const id = `${searchTerm}-${location}`;
+
     this.setState({
-      [id]: event.target.value
+      searchParams: { ...params },
+      moreJobs: true,
+    });
+
+    if (!jobs[id]) {
+      fetchJobs(params)
+        .then(jobList => {
+          this.setState(() => {
+            return {
+              jobs: {
+                ...jobs,
+                [id]: jobList,
+              },
+            };
+          });
+        })
+        .catch(({ message }) => {
+          console.warn(`There was an error fetching the jobs: ${message}`);
+        });
+    }
+  };
+
+  loadMoreJobs = () => {
+    this.setState(() => ({
+      loading: true,
+    }));
+
+    const {
+      searchParams: { searchTerm, location, page },
+      jobs,
+    } = this.state;
+    const key = `${searchTerm}-${location}`;
+    const nextPage = page + 1;
+    const newJobs = { ...jobs };
+
+    fetchJobs({ searchTerm, location, page: nextPage }).then(jobList => {
+      const moreJobs = jobList.length > 0;
+      newJobs[key].push(...jobList);
+
+      this.setState(({ searchParams }) => ({
+        searchParams: { ...searchParams, page: nextPage },
+        jobs: { ...jobs, ...newJobs },
+        loading: false,
+        moreJobs,
+      }));
     });
   };
 
-  handleSubmit = event => {
-    event.preventDefault();
-    this.props.onSubmit({ ...this.state });
-  };
-
   render() {
+    const {
+      searchParams: { searchTerm, location },
+      jobs,
+    } = this.state;
+    const key = `${searchTerm}-${location}`;
+
     return (
-      <div className="form-wrapper">
-        <form onSubmit={this.handleSubmit}>
-          <label htmlFor="searchTerm">
-            what
-            <input
-              id="searchTerm"
-              value={this.state.searchTerm}
-              onChange={event => this.handleChange(event, "searchTerm")}
-              type="text"
-              placeholder="Job title, keywords, or company"
-            />
-          </label>
-          <label htmlFor="searchTerm">
-            where
-            <input
-              id="location"
-              value={this.state.location}
-              onChange={event => this.handleChange(event, "location")}
-              type="text"
-              placeholder="City, state, or zip code"
-            />
-          </label>
-          <button type="submit">Search</button>
-        </form>
-      </div>
+      <>
+        <SearchBar onSubmit={this.updateJobs} />
+
+        {jobs[key] ? <JobList jobs={jobs[key]} /> : <div>Loading...</div>}
+
+        <button onClick={this.loadMoreJobs} type="button">
+          MORE
+        </button>
+      </>
     );
   }
 }
@@ -55,109 +115,15 @@ class SearchBar extends React.Component {
 function JobList({ jobs }) {
   return (
     <div className="jobs-container">
-      {jobs.map(job => (
-        <JobPreview key={job.id} job={job} />
-      ))}
+      {jobs && jobs.map(job => <JobPreview key={job.id} job={job} />)}
     </div>
   );
 }
 
-export default class Results extends React.Component {
-  state = {
-    searchParams: {
-      searchTerm: "",
-      location: "",
-      page: 1
-    },
-    jobs: {},
-    error: null,
-    loading: false,
-    moreJobs: true
-  };
+JobList.propTypes = {
+  jobs: PropTypes.arrayOf(PropTypes.object),
+};
 
-  componentDidMount() {
-    window.addEventListener("scroll", this.handleOnScroll);
-    this.updateJobs(this.state.searchParams);
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener("scroll", this.handleOnScroll);
-  }
-
-  handleOnScroll = () => {
-    if (
-      window.innerHeight + window.scrollY >= document.body.offsetHeight &&
-      !this.state.loading &&
-      this.state.moreJobs
-    ) {
-      this.loadMoreJobs();
-    }
-  };
-
-  updateJobs = params => {
-    const { searchTerm, location } = params;
-    const id = `${searchTerm}-${location}`;
-
-    this.setState({
-      searchParams: { ...params },
-      moreJobs: true
-    });
-
-    if (!this.state.jobs[id]) {
-      fetchJobs(params)
-        .then(jobList => {
-          this.setState(({ jobs }) => {
-            return {
-              jobs: {
-                ...jobs,
-                [id]: jobList
-              }
-            };
-          });
-        })
-        .catch(error => {
-          console.warn(`Error fetching repos: ${error}`);
-
-          this.setState({
-            error: `There was an error fetching the repositories.`
-          });
-        });
-    }
-  };
-
-  loadMoreJobs = () => {
-    this.setState(({ loading }) => ({
-      loading: true
-    }));
-    const { searchTerm, location, page } = this.state.searchParams;
-    const key = `${searchTerm}-${location}`;
-    const nextPage = page + 1;
-    const newJobs = { ...this.state.jobs };
-
-    fetchJobs({ searchTerm, location, page: nextPage }).then(jobList => {
-      const moreJobs = jobList.length > 0;
-      newJobs[key].push(...jobList);
-
-      this.setState(({ searchParams, jobs }) => ({
-        searchParams: { ...searchParams, page: nextPage },
-        jobs: { ...jobs, ...newJobs },
-        loading: false,
-        moreJobs
-      }));
-    });
-  };
-
-  render() {
-    const { searchTerm, location } = this.state.searchParams;
-    const key = `${searchTerm}-${location}`;
-    const { jobs } = this.state;
-
-    return (
-      <React.Fragment>
-        <SearchBar onSubmit={this.updateJobs} />
-        {jobs[key] ? <JobList jobs={jobs[key]} /> : <div>Loading...</div>}
-        <button onClick={this.loadMoreJobs}>MORE</button>
-      </React.Fragment>
-    );
-  }
-}
+JobList.defaultProps = {
+  jobs: [],
+};
