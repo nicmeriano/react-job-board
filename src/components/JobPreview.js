@@ -1,30 +1,124 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
+import { FaClock, FaMapMarkerAlt } from 'react-icons/fa';
+
+const ParentWrapper = styled.li`
+  display: flex;
+`;
+
+const CompanyLogo = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  margin: 0 10px;
+
+  img {
+    width: 50px;
+  }
+`;
+
+const JobInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex: 4;
+  justify-content: center;
+  margin: 0 10px;
+  padding: 15px 0;
+
+  & > * {
+    margin: 5px 0;
+  }
+`;
+
+const Title = styled.h3`
+  font-weight: 500;
+  font-size: 1.2rem;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
+const Company = styled.h4`
+  font-weight: 300;
+
+  font-size: 1rem;
+`;
+
+const FlexWrapper = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const Text = styled.p`
+  font-weight: 300;
+  font-size: 0.9rem;
+  opacity: 0.8;
+  margin-left: 5px;
+`;
+
+const Icon = styled.div``;
 
 export default function JobPreview({ job }) {
-  const { title, location, company, type, created_at: createdAt, id } = job;
+  const { title, location, company, created_at: createdAt, company_logo: companyLogo, id } = job;
   return (
-    <Link
-      className="job"
-      to={{
-        pathname: '/search/results',
-        search: `?id=${id}`,
-      }}
-    >
-      <div>
-        <ul>
-          <li>{title}</li>
-          <li>{company}</li>
-          <li>{location}</li>
-          <li>{createdAt}</li>
-          <li>{type}</li>
-          <li>{id}</li>
-        </ul>
-      </div>
-    </Link>
+    <ParentWrapper>
+      <CompanyLogo>
+        <img src={companyLogo} alt={`${company} logo`} />
+      </CompanyLogo>
+      <JobInfo>
+        <Link
+          to={{
+            pathname: '/search/results',
+            search: `?id=${id}`,
+          }}
+        >
+          <Title>{title}</Title>
+        </Link>
+        <Company>{company}</Company>
+        <FlexWrapper>
+          <Icon>
+            <FaClock size={10} color="gray" />
+          </Icon>
+          <Text>{createdAt}</Text>
+        </FlexWrapper>
+        <FlexWrapper>
+          <Icon>
+            <FaMapMarkerAlt size={10} color="gray" />
+          </Icon>
+          <Text>{location}</Text>
+        </FlexWrapper>
+      </JobInfo>
+    </ParentWrapper>
   );
 }
+// export default function JobPreview({ job }) {
+//   const { title, location, company, type, created_at: createdAt, id } = job;
+//   return (
+//     // <Link
+//     //   className="job"
+//     //   to={{
+//     //     pathname: '/search/results',
+//     //     search: `?id=${id}`,
+//     //   }}
+//     // >
+//     <div>
+//       <ul>
+//         <li>{title}</li>
+//         <li>{company}</li>
+//         <li>{location}</li>
+//         <li>{createdAt}</li>
+//         <li>{type}</li>
+//         <li>{id}</li>
+//       </ul>
+//     </div>
+//     // {/* </Link> */}
+//   );
+// }
 
 JobPreview.propTypes = {
   job: PropTypes.shape({

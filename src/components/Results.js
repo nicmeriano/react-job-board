@@ -1,8 +1,50 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 import JobPreview from './JobPreview';
 import SearchBar from './SearchBar';
 import fetchJobs from '../api/FetchJobs';
+import { H1 } from '../styles/Text';
+
+const JobListWrapper = styled.ul`
+  display: flex;
+  flex-direction: column;
+  border: ${props => `1px solid ${props.theme.text.opaque}`};
+  border-radius: 3px;
+  box-shadow: ${props => (props.shadow ? props.theme.shadow.light : 'none')};
+
+  li {
+    border-bottom: ${props => `1px solid ${props.theme.text.opaque}`};
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+`;
+
+const Heading = styled(H1)`
+  margin: 2rem 0;
+`;
+
+const ResultsContainer = styled.div`
+  margin: 2rem 0;
+`;
+
+function JobList({ jobs }) {
+  return (
+    <JobListWrapper shadow>
+      {jobs && jobs.map(job => <JobPreview key={job.id} job={job} />)}
+    </JobListWrapper>
+  );
+}
+
+JobList.propTypes = {
+  jobs: PropTypes.arrayOf(PropTypes.object),
+};
+
+JobList.defaultProps = {
+  jobs: [],
+};
 
 export default class Results extends React.Component {
   constructor(props) {
@@ -99,31 +141,11 @@ export default class Results extends React.Component {
     const key = `${searchTerm}-${location}`;
 
     return (
-      <>
+      <ResultsContainer>
         <SearchBar onSubmit={this.updateJobs} />
-
+        <Heading>Latest Jobs</Heading>
         {jobs[key] ? <JobList jobs={jobs[key]} /> : <div>Loading...</div>}
-
-        <button onClick={this.loadMoreJobs} type="button">
-          MORE
-        </button>
-      </>
+      </ResultsContainer>
     );
   }
 }
-
-function JobList({ jobs }) {
-  return (
-    <div className="jobs-container">
-      {jobs && jobs.map(job => <JobPreview key={job.id} job={job} />)}
-    </div>
-  );
-}
-
-JobList.propTypes = {
-  jobs: PropTypes.arrayOf(PropTypes.object),
-};
-
-JobList.defaultProps = {
-  jobs: [],
-};

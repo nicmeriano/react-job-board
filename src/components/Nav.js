@@ -1,0 +1,102 @@
+import React from 'react';
+import { Link } from 'react-router-dom';
+import styled from 'styled-components';
+import { FaCode } from 'react-icons/fa';
+import { StyledButton } from '../styles/Buttons';
+
+const Header = styled.header`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 0 2rem;
+  z-index: 999;
+  height: 70px;
+  background: white;
+  box-shadow: 0 1px 5px 0px rgba(0, 0, 0, 0.1);
+`;
+
+const BrandLogo = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+
+  svg {
+    color: ${props => props.theme.primary};
+    font-size: 2rem;
+  }
+`;
+
+const NavList = styled.ul`
+  display: flex;
+  flex: 1;
+  justify-content: flex-end;
+`;
+
+const NavLink = styled.li`
+  margin-left: 1.5rem;
+  position: relative;
+  display: flex;
+  height: 100%;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 0;
+    height: 2px;
+    background: ${props => props.theme.primary};
+    transition: all 0.3s ease-out;
+  }
+  &:hover:after,
+  &:focus-within:after {
+    width: 100%;
+  }
+`;
+
+const Button = styled(StyledButton)`
+  padding: 1rem 0.5rem;
+  margin-left: 1.5rem;
+  border: ${props => `${props.theme.primary} 1px solid`};
+`;
+
+const StyledLink = styled(Link)`
+  font-weight: 400;
+  padding: 1rem 0.5rem;
+
+  &:focus {
+    outline: none;
+  }
+`;
+
+export default function Nav() {
+  return (
+    <Header>
+      <BrandLogo>
+        <FaCode />
+      </BrandLogo>
+      <NavList>
+        <NavLink>
+          <StyledLink to="/">Home</StyledLink>
+        </NavLink>
+        <NavLink>
+          <StyledLink to="/">Jobs</StyledLink>
+        </NavLink>
+        <NavLink>
+          <StyledLink to="/">Companies</StyledLink>
+        </NavLink>
+        <NavLink>
+          <StyledLink to="/">Trends</StyledLink>
+        </NavLink>
+      </NavList>
+      <Button inverted>
+        <StyledLink to="/">Post a job</StyledLink>
+      </Button>
+    </Header>
+  );
+}
