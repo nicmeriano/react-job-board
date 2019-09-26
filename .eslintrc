@@ -29,6 +29,13 @@
         },
         "allowChildren": false
       }
+    ],
+    "react/jsx-props-no-spreading": [
+      "warn",
+      {
+        "html": "enforce",
+        "custom": "ignore"
+      }
     ]
   }
 }

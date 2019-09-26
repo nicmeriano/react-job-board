@@ -1,7 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { FaCode, FaBars } from 'react-icons/fa';
+import {
+  FaCode,
+  FaBars,
+  FaHome,
+  FaBriefcase,
+  FaBuilding,
+  FaChartLine,
+  FaSearch,
+} from 'react-icons/fa';
 import { slide as Menu } from 'react-burger-menu';
 import PropTypes from 'prop-types';
 import { StyledButton } from '../styles/Buttons';
@@ -34,8 +42,9 @@ const BrandLogo = styled.div`
 
 const NavList = styled.ul`
   display: flex;
+  flex-direction: ${props => (props.column ? 'column' : 'row')};
   flex: 1;
-  justify-content: flex-end;
+  justify-content: ${props => (props.justify ? props.justify : 'flex-start')};
 `;
 
 const NavLink = styled.li`
@@ -67,12 +76,30 @@ const Button = styled(StyledButton)`
   border: ${props => `${props.theme.primary} 1px solid`};
 `;
 
-const StyledLink = styled(Link)`
-  font-weight: 400;
+/*
+  Must filter out non-standard props (mobile in this case)
+  when passing props down to Link component to avoid:
+  'Warning: Received `true` for non-boolean attribute `gray`'
+*/
+const StyledLink = styled(({ mobile, ...props }) => <Link {...props} />)`
+  font-weight: ${props => (props.mobile ? 900 : 400)};
   padding: 1rem 0.5rem;
+  font-size: ${props => props.mobile && '1.1rem'};
+  margin: ${props => props.mobile && '.5rem 0'};
+  transition: all ease-out 0.1s;
+  color: ${props => props.mobile && '#b8b7ae'};
+
+  svg {
+    margin-right: 1rem;
+    font-size: 1rem;
+  }
 
   &:focus {
     outline: none;
+  }
+
+  &:hover {
+    color: ${props => props.theme.primary};
   }
 `;
 
@@ -83,10 +110,25 @@ const MenuWrapper = styled(Header)`
 
   .bm-menu {
     background: ${props => props.theme.bg.white};
+    background: #373a46;
   }
 
   .bm-burger-button {
     display: none;
+  }
+
+  .bm-cross {
+    background: #b8b7ae;
+  }
+
+  nav {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding-top: 5rem;
+    width: 70%;
+    margin: 0 auto;
   }
 `;
 
@@ -114,7 +156,7 @@ function DesktopNav() {
       <BrandLogo>
         <FaCode />
       </BrandLogo>
-      <NavList>
+      <NavList justify="flex-end">
         <NavLink>
           <StyledLink to="/">Home</StyledLink>
         </NavLink>
@@ -135,36 +177,52 @@ function DesktopNav() {
   );
 }
 
-function MobileNav({ isOpen, toggleNav }) {
+function MobileNav({ toggled, toggleNav }) {
   return (
     <MenuWrapper>
       <MobileHeader>
         <BrandLogo>
           <FaCode />
         </BrandLogo>
-        <BurgerButton onClick={toggleNav}>
+        <BurgerButton onClick={() => toggleNav(true)}>
           <FaBars size={25} />
         </BurgerButton>
       </MobileHeader>
       <Menu
         right
-        isOpen={isOpen}
-        onStateChange={state => {
-          if (!state.isOpen) {
-            toggleNav();
-          }
+        width={250}
+        isOpen={toggled}
+        onStateChange={({ isOpen }) => {
+          toggleNav(isOpen);
         }}
       >
-        <Link to="/">Home</Link>
-        <Link to="/">Contact</Link>
-        <Link to="/">Test</Link>
+        <StyledLink mobile onClick={() => toggleNav(false)} to="/">
+          <FaHome />
+          Home
+        </StyledLink>
+        <StyledLink mobile onClick={() => toggleNav(false)} to="/">
+          <FaSearch />
+          Jobs
+        </StyledLink>
+        <StyledLink mobile onClick={() => toggleNav(false)} to="/">
+          <FaBuilding />
+          Companies
+        </StyledLink>
+        <StyledLink mobile onClick={() => toggleNav(false)} to="/">
+          <FaChartLine />
+          Trends
+        </StyledLink>
+        <StyledLink mobile onClick={() => toggleNav(false)} to="/">
+          <FaBriefcase />
+          Post a job
+        </StyledLink>
       </Menu>
     </MenuWrapper>
   );
 }
 
 MobileNav.propTypes = {
-  isOpen: PropTypes.bool.isRequired,
+  toggled: PropTypes.bool.isRequired,
   toggleNav: PropTypes.func.isRequired,
 };
 
@@ -187,9 +245,8 @@ export default class Nav extends React.Component {
     window.removeEventListener('resize', this.updateWindowDimensions);
   }
 
-  handleOnClick = () => {
-    const { isOpen } = this.state;
-    this.setState({ isOpen: !isOpen });
+  handleOnClick = state => {
+    this.setState({ isOpen: state });
   };
 
   updateWindowDimentions = () => {
@@ -205,7 +262,7 @@ export default class Nav extends React.Component {
     const { isMobile, isOpen } = this.state;
     return (
       <>
-        {isMobile ? <MobileNav isOpen={isOpen} toggleNav={this.handleOnClick} /> : <DesktopNav />}
+        {isMobile ? <MobileNav toggled={isOpen} toggleNav={this.handleOnClick} /> : <DesktopNav />}
       </>
     );
   }
