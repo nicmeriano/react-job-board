@@ -1,5 +1,8 @@
 export const Theme = {
   primary: '#FF5A5F',
+  bg: {
+    white: '#fff',
+  },
   text: {
     default: 'rgb(72,72,72)',
     opaque: 'rgba(100,100,100, .1)',

@@ -1,7 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { FaCode } from 'react-icons/fa';
+import { FaCode, FaBars } from 'react-icons/fa';
+import { slide as Menu } from 'react-burger-menu';
+import PropTypes from 'prop-types';
 import { StyledButton } from '../styles/Buttons';
 
 const Header = styled.header`
@@ -74,7 +76,39 @@ const StyledLink = styled(Link)`
   }
 `;
 
-export default function Nav() {
+const MenuWrapper = styled(Header)`
+  padding: 0;
+  height: 0;
+  position: relative;
+
+  .bm-menu {
+    background: ${props => props.theme.bg.white};
+  }
+
+  .bm-burger-button {
+    display: none;
+  }
+`;
+
+const BurgerButton = styled.div`
+  cursor: pointer;
+  padding: 1rem;
+
+  svg {
+    transition: 0.1s all ease-out;
+    color: ${props => props.theme.text.default};
+  }
+
+  &:hover svg {
+    color: ${props => props.theme.primary};
+  }
+`;
+
+const MobileHeader = styled(Header)`
+  justify-content: space-between;
+`;
+
+function DesktopNav() {
   return (
     <Header>
       <BrandLogo>
@@ -99,4 +133,80 @@ export default function Nav() {
       </Button>
     </Header>
   );
+}
+
+function MobileNav({ isOpen, toggleNav }) {
+  return (
+    <MenuWrapper>
+      <MobileHeader>
+        <BrandLogo>
+          <FaCode />
+        </BrandLogo>
+        <BurgerButton onClick={toggleNav}>
+          <FaBars size={25} />
+        </BurgerButton>
+      </MobileHeader>
+      <Menu
+        right
+        isOpen={isOpen}
+        onStateChange={state => {
+          if (!state.isOpen) {
+            toggleNav();
+          }
+        }}
+      >
+        <Link to="/">Home</Link>
+        <Link to="/">Contact</Link>
+        <Link to="/">Test</Link>
+      </Menu>
+    </MenuWrapper>
+  );
+}
+
+MobileNav.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  toggleNav: PropTypes.func.isRequired,
+};
+
+export default class Nav extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      isMobile: false,
+      isOpen: false,
+    };
+  }
+
+  componentDidMount() {
+    this.updateWindowDimentions();
+    window.addEventListener('resize', this.updateWindowDimentions);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.updateWindowDimensions);
+  }
+
+  handleOnClick = () => {
+    const { isOpen } = this.state;
+    this.setState({ isOpen: !isOpen });
+  };
+
+  updateWindowDimentions = () => {
+    const { isMobile } = this.state;
+    if (window.innerWidth < 768 && !isMobile) {
+      this.setState({ isMobile: true });
+    } else if (window.innerWidth >= 768 && isMobile) {
+      this.setState({ isMobile: false });
+    }
+  };
+
+  render() {
+    const { isMobile, isOpen } = this.state;
+    return (
+      <>
+        {isMobile ? <MobileNav isOpen={isOpen} toggleNav={this.handleOnClick} /> : <DesktopNav />}
+      </>
+    );
+  }
 }
