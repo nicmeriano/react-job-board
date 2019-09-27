@@ -138,7 +138,7 @@ const BurgerButton = styled.div`
 
   svg {
     transition: 0.1s all ease-out;
-    color: ${props => props.theme.text.default};
+    color: ${props => props.theme.text.default.regular};
   }
 
   &:hover svg {

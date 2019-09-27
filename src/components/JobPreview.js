@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { FaClock, FaMapMarkerAlt } from 'react-icons/fa';
+import { H2 } from '../styles/Text';
+import getInitials from '../utils/getInitials';
 
 const ParentWrapper = styled.li`
   display: flex;
@@ -63,12 +65,27 @@ const Text = styled.p`
 
 const Icon = styled.div``;
 
+const AltImg = styled(H2)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  height: 50px;
+  background: ${props => props.theme.text.opaque};
+  border-radius: 50%;
+  color: ${props => props.theme.text.default.light};
+`;
+
 export default function JobPreview({ job }) {
   const { title, location, company, created_at: createdAt, company_logo: companyLogo, id } = job;
   return (
     <ParentWrapper>
       <CompanyLogo>
-        <img src={companyLogo} alt={`${company} logo`} />
+        {companyLogo ? (
+          <img src={companyLogo} alt={`${company} logo`} />
+        ) : (
+          <AltImg>{getInitials(company)}</AltImg>
+        )}
       </CompanyLogo>
       <JobInfo>
         <Link
@@ -96,29 +113,6 @@ export default function JobPreview({ job }) {
     </ParentWrapper>
   );
 }
-// export default function JobPreview({ job }) {
-//   const { title, location, company, type, created_at: createdAt, id } = job;
-//   return (
-//     // <Link
-//     //   className="job"
-//     //   to={{
-//     //     pathname: '/search/results',
-//     //     search: `?id=${id}`,
-//     //   }}
-//     // >
-//     <div>
-//       <ul>
-//         <li>{title}</li>
-//         <li>{company}</li>
-//         <li>{location}</li>
-//         <li>{createdAt}</li>
-//         <li>{type}</li>
-//         <li>{id}</li>
-//       </ul>
-//     </div>
-//     // {/* </Link> */}
-//   );
-// }
 
 JobPreview.propTypes = {
   job: PropTypes.shape({

@@ -4,7 +4,11 @@ export const Theme = {
     white: '#fff',
   },
   text: {
-    default: 'rgb(72,72,72)',
+    default: {
+      regular: 'hsla(0, 0%, 28.2%, 1)',
+      light: 'hsla(0,0%,60%, 1)',
+    },
+
     opaque: 'rgba(100,100,100, .1)',
   },
   shadow: {

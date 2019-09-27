@@ -7,7 +7,7 @@ export const fontStack = css`
 
 export const H1 = styled.h1`
   ${fontStack};
-  color: ${Theme.text.default};
+  color: ${Theme.text.default.regular};
   font-weight: 900;
   font-size: 1.5rem;
   line-height: 1.3;
@@ -16,7 +16,7 @@ export const H1 = styled.h1`
 `;
 
 export const H2 = styled.h2`
-  color: ${Theme.text.default};
+  color: ${Theme.text.default.regular};
   ${fontStack};
   font-weight: 700;
   font-size: 1.25rem;
@@ -26,7 +26,7 @@ export const H2 = styled.h2`
 `;
 
 export const H3 = styled.h3`
-  color: ${Theme.text.default};
+  color: ${Theme.text.default.regular};
   ${fontStack};
   font-weight: 500;
   font-size: 1rem;
@@ -36,7 +36,7 @@ export const H3 = styled.h3`
 `;
 
 export const H4 = styled.h4`
-  color: ${Theme.text.default};
+  color: ${Theme.text.default.regular};
   ${fontStack};
   font-weight: 500;
   font-size: 0.875rem;
@@ -46,7 +46,7 @@ export const H4 = styled.h4`
 `;
 
 export const H5 = styled.h5`
-  color: ${Theme.text.default};
+  color: ${Theme.text.default.regular};
   ${fontStack};
   font-weight: 500;
   font-size: 0.75rem;
@@ -56,7 +56,7 @@ export const H5 = styled.h5`
 `;
 
 export const H6 = styled.h6`
-  color: ${Theme.text.default};
+  color: ${Theme.text.default.regular};
   ${fontStack};
   font-weight: 600;
   text-transform: uppercase;
@@ -64,4 +64,38 @@ export const H6 = styled.h6`
   line-height: 1.5;
   margin: 0;
   padding: 0;
+`;
+
+export const P = styled.p`
+  color: ${Theme.text.default.regular};
+  ${fontStack};
+  font-weight: 400;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  margin: 0;
+  padding: 0;
+`;
+
+export const Span = styled.span`
+  color: ${Theme.text.default.regular};
+  ${fontStack};
+  font-weight: 400;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  margin: 0;
+  padding: 0;
+`;
+
+export const FlexRow = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+`;
+
+export const FlexCol = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
 `;

@@ -3,8 +3,9 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import JobPreview from './JobPreview';
 import SearchBar from './SearchBar';
+import Loading from './Loading';
 import fetchJobs from '../api/FetchJobs';
-import { H1 } from '../styles/Text';
+import { H1, P } from '../styles/Text';
 
 const JobListWrapper = styled.ul`
   display: flex;
@@ -24,6 +25,13 @@ const JobListWrapper = styled.ul`
 
 const Heading = styled(H1)`
   margin: 2rem 0;
+`;
+
+const StyledP = styled(P)`
+  text-align: center;
+  font-weight: 600;
+  opacity: 0.8;
+  margin-top: 3rem;
 `;
 
 const ResultsContainer = styled.div`
@@ -86,6 +94,7 @@ export default class Results extends React.Component {
 
     this.setState({
       searchParams: { ...params },
+      loading: true,
       moreJobs: true,
     });
 
@@ -93,11 +102,14 @@ export default class Results extends React.Component {
       fetchJobs(params)
         .then(jobList => {
           this.setState(() => {
+            const moreJobs = jobList.length > 0;
             return {
               jobs: {
                 ...jobs,
                 [id]: jobList,
               },
+              loading: false,
+              moreJobs,
             };
           });
         })
@@ -137,14 +149,17 @@ export default class Results extends React.Component {
     const {
       searchParams: { searchTerm, location },
       jobs,
+      loading,
+      moreJobs,
     } = this.state;
     const key = `${searchTerm}-${location}`;
-
     return (
       <ResultsContainer>
         <SearchBar onSubmit={this.updateJobs} />
         <Heading>Latest Jobs</Heading>
-        {jobs[key] ? <JobList jobs={jobs[key]} /> : <div>Loading...</div>}
+        {jobs[key] && <JobList jobs={jobs[key]} />}
+        {loading && <Loading />}
+        {!moreJobs && <StyledP>{`Found ${jobs[key] ? jobs[key].length : 0} jobs`}</StyledP>}
       </ResultsContainer>
     );
   }

@@ -10,7 +10,7 @@ const GlobalStyles = createGlobalStyle`
     font-family: 'Be Vietnam', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    color: ${props => props.theme.text.default}
+    color: ${props => props.theme.text.default.regular}
 
   }
   a {
