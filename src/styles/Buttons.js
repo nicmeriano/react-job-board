@@ -7,7 +7,7 @@ export const StyledButton = styled.button`
   border-radius: 3px;
   color: ${props => (props.inverted ? props.theme.primary : 'white')};
   border: ${props => `2px solid ${props.theme.primary}`};
-  transition: 0.3s all ease-out;
+  transition: 0.1s all ease-out;
   font-weight: 500;
 
   &:hover {

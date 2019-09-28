@@ -54,20 +54,22 @@ JobList.defaultProps = {
   jobs: [],
 };
 
+let CACHED_STATE = {
+  searchParams: {
+    searchTerm: '',
+    location: '',
+    page: 1,
+  },
+  jobs: {},
+  loading: false,
+  moreJobs: true,
+};
+
 export default class Results extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      searchParams: {
-        searchTerm: '',
-        location: '',
-        page: 1,
-      },
-      jobs: {},
-      loading: false,
-      moreJobs: true,
-    };
+    this.state = CACHED_STATE;
   }
 
   componentDidMount() {
@@ -78,6 +80,7 @@ export default class Results extends React.Component {
 
   componentWillUnmount() {
     window.removeEventListener('scroll', this.handleOnScroll);
+    CACHED_STATE = this.state;
   }
 
   handleOnScroll = () => {
@@ -92,13 +95,13 @@ export default class Results extends React.Component {
     const { jobs } = this.state;
     const id = `${searchTerm}-${location}`;
 
-    this.setState({
-      searchParams: { ...params },
-      loading: true,
-      moreJobs: true,
-    });
-
     if (!jobs[id]) {
+      this.setState({
+        searchParams: { ...params, page: 1 },
+        loading: true,
+        moreJobs: true,
+      });
+
       fetchJobs(params)
         .then(jobList => {
           this.setState(() => {
@@ -106,7 +109,7 @@ export default class Results extends React.Component {
             return {
               jobs: {
                 ...jobs,
-                [id]: jobList,
+                [id]: [jobList],
               },
               loading: false,
               moreJobs,
@@ -116,6 +119,14 @@ export default class Results extends React.Component {
         .catch(({ message }) => {
           console.warn(`There was an error fetching the jobs: ${message}`);
         });
+    } else {
+      this.setState({
+        searchParams: {
+          ...params,
+          page: jobs[id].length,
+        },
+        moreJobs: true,
+      });
     }
   };
 
@@ -134,7 +145,7 @@ export default class Results extends React.Component {
 
     fetchJobs({ searchTerm, location, page: nextPage }).then(jobList => {
       const moreJobs = jobList.length > 0;
-      newJobs[key].push(...jobList);
+      newJobs[key].push(jobList);
 
       this.setState(({ searchParams }) => ({
         searchParams: { ...searchParams, page: nextPage },
@@ -153,13 +164,15 @@ export default class Results extends React.Component {
       moreJobs,
     } = this.state;
     const key = `${searchTerm}-${location}`;
+    const allJobs = jobs[key] ? [].concat(...jobs[key]) : [];
+
     return (
       <ResultsContainer>
         <SearchBar onSubmit={this.updateJobs} />
         <Heading>Latest Jobs</Heading>
-        {jobs[key] && <JobList jobs={jobs[key]} />}
-        {loading && <Loading />}
-        {!moreJobs && <StyledP>{`Found ${jobs[key] ? jobs[key].length : 0} jobs`}</StyledP>}
+        {jobs[key] && <JobList jobs={allJobs} />}
+        {loading && <Loading size={10} time={0.5} />}
+        {!moreJobs && <StyledP>{`Found ${jobs[key] ? allJobs.length : 0} jobs`}</StyledP>}
       </ResultsContainer>
     );
   }

@@ -1,11 +1,9 @@
 import { keyframes } from 'styled-components';
 
 export const bounce = keyframes`
-  0% {transform: translateY(0);}
-  25% {transform: translateY(5px);}
-  50% {transform: translateY(-5px);}
-  75% {transform: translateY(5px);}
-  100% {transform: translateY(-5px);}
+  from {transform: translateY(0);}
+  to {transform: translateY(10px);}
+
 `;
 
 export const oscillate = keyframes`

@@ -86,7 +86,6 @@ const StyledLink = styled(({ mobile, ...props }) => <Link {...props} />)`
   padding: 1rem 0.5rem;
   font-size: ${props => props.mobile && '1.1rem'};
   margin: ${props => props.mobile && '.5rem 0'};
-  transition: all ease-out 0.1s;
   color: ${props => props.mobile && '#b8b7ae'};
 
   svg {
@@ -97,9 +96,8 @@ const StyledLink = styled(({ mobile, ...props }) => <Link {...props} />)`
   &:focus {
     outline: none;
   }
-
   &:hover {
-    color: ${props => props.theme.primary};
+    color: ${props => (props.mobile ? props.theme.primary : props.theme.text.default)};
   }
 `;
 
