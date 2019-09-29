@@ -16,4 +16,7 @@ export const Theme = {
     medium: '0px 4px 7px -1px rgba(0,0,0,0.4)',
     dark: '0px 4px 7px -1px rgba(0,0,0,0.6)',
   },
+  font: {
+    stack: `'Be Vietnam', sans-serif`,
+  },
 };

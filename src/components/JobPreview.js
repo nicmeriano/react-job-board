@@ -1,13 +1,18 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { FaClock, FaMapMarkerAlt } from 'react-icons/fa';
 import { H2 } from '../styles/Text';
 import getInitials from '../utils/getInitials';
 
 const ParentWrapper = styled.li`
   display: flex;
+  ${props =>
+    props.direction &&
+    css`
+      flex-direction: ${props.direction};
+    `}
 `;
 
 const CompanyLogo = styled.div`

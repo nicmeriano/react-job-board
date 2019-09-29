@@ -1,4 +1,4 @@
-const size = {
+const Size = {
   xxsm: '320px',
   xsm: '375px',
   sm: '425px',
@@ -8,14 +8,4 @@ const size = {
   xxl: '2560px',
 };
 
-export default size;
-
-// export default device = {
-//   xxsm: `(min-width: ${size.xxsm})`,
-//   xsm: `(min-width: ${size.xsm})`,
-//   sm: `(min-width: ${size.sm})`,
-//   md: `(min-width: ${size.md})`,
-//   lg: `(min-width: ${size.lg})`,
-//   xl: `(min-width: ${size.xl})`,
-//   xxl: `(min-width: ${size.xxl})`,
-// };
+export default Size;

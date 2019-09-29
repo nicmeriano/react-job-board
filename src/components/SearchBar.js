@@ -86,6 +86,7 @@ const Button = styled(StyledButton)`
   height: 100%;
   margin-left: 10px;
   text-transform: uppercase;
+  padding: 0;
 `;
 
 export default class SearchBar extends React.Component {

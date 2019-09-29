@@ -11,7 +11,7 @@ import GlobalStyles from './styles/Global';
 
 const PageWrapper = styled.div`
   min-height: 100vh;
-  max-width: 1200px;
+  max-width: 1300px;
   margin: 0 auto;
   padding: 70px 1rem;
 `;

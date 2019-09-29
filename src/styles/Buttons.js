@@ -9,6 +9,7 @@ export const StyledButton = styled.button`
   border: ${props => `2px solid ${props.theme.primary}`};
   transition: 0.1s all ease-out;
   font-weight: 500;
+  padding: 1rem 4rem;
 
   &:hover {
     color: ${props => (props.inverted ? 'white' : props.theme.primary)};

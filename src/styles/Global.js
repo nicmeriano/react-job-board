@@ -23,6 +23,40 @@ button {
   padding: 0;
   color: inherit;
 }
+
+strong {
+  font-weight: 700;
+}
+
+p {
+  color: ${props => props.theme.text.default.regular};
+  font-weight: 400;
+
+  line-height: 1.4;
+  margin: 0;
+  padding: 0;
+}
+
+span {
+  color: ${props => props.theme.text.default.regular};
+  font-weight: 400;
+
+  line-height: 1.4;
+  margin: 0;
+  padding: 0;
+}
+
+li {
+  list-style: disc;
+  color: ${props => props.theme.text.default.regular};
+  font-weight: 400;
+
+  line-height: 1.4;
+  margin: 0;
+  padding: 0;
+}
+
+
 `;
 
 export default GlobalStyles;
