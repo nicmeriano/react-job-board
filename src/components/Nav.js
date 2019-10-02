@@ -162,14 +162,14 @@ function DesktopNav() {
           <StyledLink to="/">Jobs</StyledLink>
         </NavLink>
         <NavLink>
-          <StyledLink to="/">Companies</StyledLink>
+          <StyledLink to="/companies">Companies</StyledLink>
         </NavLink>
         <NavLink>
-          <StyledLink to="/">Trends</StyledLink>
+          <StyledLink to="/trends">Trends</StyledLink>
         </NavLink>
       </NavList>
       <Button inverted>
-        <StyledLink to="/">Post a job</StyledLink>
+        <StyledLink to="/post-a-job">Post a job</StyledLink>
       </Button>
     </Header>
   );
@@ -202,15 +202,15 @@ function MobileNav({ toggled, toggleNav }) {
           <FaSearch />
           Jobs
         </StyledLink>
-        <StyledLink mobile onClick={() => toggleNav(false)} to="/">
+        <StyledLink mobile onClick={() => toggleNav(false)} to="/companies">
           <FaBuilding />
           Companies
         </StyledLink>
-        <StyledLink mobile onClick={() => toggleNav(false)} to="/">
+        <StyledLink mobile onClick={() => toggleNav(false)} to="/trends">
           <FaChartLine />
           Trends
         </StyledLink>
-        <StyledLink mobile onClick={() => toggleNav(false)} to="/">
+        <StyledLink mobile onClick={() => toggleNav(false)} to="/post-a-job">
           <FaBriefcase />
           Post a job
         </StyledLink>

@@ -6,6 +6,7 @@ import SearchBar from './SearchBar';
 import Loading from './Loading';
 import fetchJobs from '../api/FetchJobs';
 import { H1, P } from '../styles/Text';
+import timeSince from '../utils/timeSince';
 
 const JobListWrapper = styled.ul`
   display: flex;
@@ -41,7 +42,12 @@ const ResultsContainer = styled.div`
 function JobList({ jobs }) {
   return (
     <JobListWrapper shadow>
-      {jobs && jobs.map(job => <JobPreview key={job.id} job={job} />)}
+      {jobs &&
+        jobs.map(job => {
+          const { created_at: created } = job;
+          const timePosted = timeSince(created);
+          return <JobPreview key={job.id} job={{ ...job, created_at: timePosted }} />;
+        })}
     </JobListWrapper>
   );
 }
