@@ -1,15 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import {
-  FaCode,
-  FaBars,
-  FaHome,
-  FaBriefcase,
-  FaBuilding,
-  FaChartLine,
-  FaSearch,
-} from 'react-icons/fa';
+import { FaCode, FaBars, FaHome, FaBriefcase, FaBuilding, FaChartLine } from 'react-icons/fa';
 import { slide as Menu } from 'react-burger-menu';
 import PropTypes from 'prop-types';
 import { StyledButton } from '../styles/Buttons';
@@ -151,13 +143,10 @@ const MobileHeader = styled(Header)`
 function DesktopNav() {
   return (
     <Header>
-      <BrandLogo>
+      <BrandLogo as={Link} to="/">
         <FaCode />
       </BrandLogo>
       <NavList justify="flex-end">
-        <NavLink>
-          <StyledLink to="/">Home</StyledLink>
-        </NavLink>
         <NavLink>
           <StyledLink to="/">Jobs</StyledLink>
         </NavLink>
@@ -196,10 +185,6 @@ function MobileNav({ toggled, toggleNav }) {
       >
         <StyledLink mobile onClick={() => toggleNav(false)} to="/">
           <FaHome />
-          Home
-        </StyledLink>
-        <StyledLink mobile onClick={() => toggleNav(false)} to="/">
-          <FaSearch />
           Jobs
         </StyledLink>
         <StyledLink mobile onClick={() => toggleNav(false)} to="/companies">

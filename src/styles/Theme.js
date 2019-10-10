@@ -15,7 +15,7 @@ export const Theme = {
   },
   shadow: {
     light: '0px 4px 20px -1px rgba(0,0,0,0.05)',
-    medium: '0px 4px 7px -1px rgba(0,0,0,0.2)',
+    medium: '0px 4px 7px -1px rgba(0,0,0,0.1)',
     dark: '0px 4px 7px -1px rgba(0,0,0,0.4)',
   },
   font: {

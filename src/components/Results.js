@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import JobPreview from './JobPreview';
 import SearchBar from './SearchBar';
 import Loading from './Loading';
+import TopTech from './TopTech';
 import fetchJobs from '../api/FetchJobs';
 import { H1, P } from '../styles/Text';
 import timeSince from '../utils/timeSince';
@@ -26,6 +27,11 @@ const JobListWrapper = styled.ul`
 
 const Heading = styled(H1)`
   margin: 2rem 0;
+`;
+
+const TitleHeading = styled(Heading)`
+  font-size: 2.5rem;
+  padding: 2rem 0;
 `;
 
 const StyledP = styled(P)`
@@ -171,11 +177,23 @@ export default class Results extends React.Component {
     } = this.state;
     const key = `${searchTerm}-${location}`;
     const allJobs = jobs[key] ? [].concat(...jobs[key]) : [];
+    let searchHeading;
+    if (searchTerm && location) {
+      searchHeading = `${searchTerm} jobs in ${location}`;
+    } else if (searchTerm) {
+      searchHeading = `${searchTerm} jobs`;
+    } else if (location) {
+      searchHeading = `Jobs in ${location}`;
+    } else {
+      searchHeading = `Latest Jobs`;
+    }
 
     return (
       <ResultsContainer>
+        <TitleHeading>Find your dream developer job today </TitleHeading>
         <SearchBar onSubmit={this.updateJobs} />
-        <Heading>Latest Jobs</Heading>
+        <TopTech handleClick={this.updateJobs} />
+        <Heading>{searchHeading}</Heading>
         {jobs[key] && <JobList jobs={allJobs} />}
         {loading && <Loading size={10} time={0.5} />}
         {!moreJobs && <StyledP>{`Found ${jobs[key] ? allJobs.length : 0} jobs`}</StyledP>}

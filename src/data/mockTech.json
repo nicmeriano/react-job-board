@@ -1,0 +1,34 @@
+[
+  {
+    "name": "Java",
+    "jobs": "13889"
+  },
+  {
+    "name": "JavaScript",
+    "jobs": "11557"
+  },
+  {
+    "name": "SQL",
+    "jobs": "9447"
+  },
+  {
+    "name": "HTML",
+    "jobs": "8764"
+  },
+  {
+    "name": "CSS",
+    "jobs": "9847"
+  },
+  {
+    "name": "Python",
+    "jobs": "6978"
+  },
+  {
+    "name": "Angular",
+    "jobs": "6047"
+  },
+  {
+    "name": "React",
+    "jobs": "7894"
+  }
+]

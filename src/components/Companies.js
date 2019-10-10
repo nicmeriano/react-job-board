@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import mockCompanies from '../misc/mockCompanies.json';
+import PropTypes from 'prop-types';
+import mockCompanies from '../data/mockCompanies.json';
 import { H1, H2 } from '../styles/Text';
 import Size from '../styles/device';
 
@@ -10,7 +11,7 @@ const List = styled.ul`
   justify-content: center;
 `;
 
-const CardWrapper = styled.li`
+const CompanyWrapper = styled.li`
   padding: 1rem;
   border-radius: 3px;
   list-style: none;
@@ -32,7 +33,7 @@ const CardWrapper = styled.li`
   }
 `;
 
-const Company = styled.h3`
+const CompanyName = styled.h3`
   font-size: 1.2rem;
   font-weight: 600;
   margin-bottom: 0.3rem;
@@ -75,7 +76,7 @@ const SubHeading = styled(H2)`
   font-weight: 600;
 `;
 
-function Card({ company }) {
+function Company({ company }) {
   const {
     company_name: companyName,
     url,
@@ -85,20 +86,31 @@ function Card({ company }) {
     description_short: description,
   } = company;
   return (
-    <CardWrapper as="a" href={url} target="_blank">
-      <Company>{companyName}</Company>
+    <CompanyWrapper as="a" href={url} target="_blank">
+      <CompanyName>{companyName}</CompanyName>
       <Location>{`${city}, ${state}`}</Location>
       <Category>{category}</Category>
       <Description>{description}</Description>
-    </CardWrapper>
+    </CompanyWrapper>
   );
 }
+
+Company.propTypes = {
+  company: PropTypes.shape({
+    company_name: PropTypes.string.isRequired,
+    url: PropTypes.string.isRequired,
+    city: PropTypes.string.isRequired,
+    state: PropTypes.string.isRequired,
+    company_category: PropTypes.string.isRequired,
+    description_short: PropTypes.string.isRequired,
+  }).isRequired,
+};
 
 function CompanyList() {
   return (
     <List>
       {mockCompanies.map(company => (
-        <Card company={company} />
+        <Company key={company.company_name_id} company={company} />
       ))}
     </List>
   );
