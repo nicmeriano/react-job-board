@@ -33,7 +33,7 @@ const CompanyLogo = styled.div`
   }
 
   img {
-    width: 100px;
+    max-width: 100px;
   }
 `;
 

@@ -168,7 +168,7 @@ function MobileNav({ toggled, toggleNav }) {
   return (
     <MenuWrapper>
       <MobileHeader>
-        <BrandLogo>
+        <BrandLogo as={Link} to="/">
           <FaCode />
         </BrandLogo>
         <BurgerButton onClick={() => toggleNav(true)}>
