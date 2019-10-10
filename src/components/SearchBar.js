@@ -8,8 +8,6 @@ const ParentForm = styled.form`
   display: flex;
   flex-direction: column;
   width: 100%;
-  /* padding: 1rem; */
-  /* box-shadow: 1px 2px 5px 2px rgba(0, 0, 0, 0.1); */
   justify-content: center;
 
   label {

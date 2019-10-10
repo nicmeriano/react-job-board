@@ -16,7 +16,7 @@ const Ball = styled.div`
 const Wrapper = styled.div`
   display: flex;
   justify-content: center;
-  margin: 5rem 0;
+  margin: 3rem 0;
 `;
 
 const Letter = styled(H2)`

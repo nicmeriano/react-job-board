@@ -7,6 +7,7 @@ import Job from './components/Job';
 import Loading from './components/Loading';
 import Nav from './components/Nav';
 import ComingSoon from './components/ComingSoon';
+import Companies from './components/Companies';
 import { Theme } from './styles/Theme';
 import GlobalStyles from './styles/Global';
 
@@ -30,7 +31,7 @@ export default function App() {
               <Switch>
                 <Route exact path="/" component={Results} />
                 <Route path="/search" component={Job} />
-                <Route path="/companies" component={ComingSoon} />
+                <Route path="/companies" component={Companies} />
                 <Route path="/trends" component={ComingSoon} />
                 <Route path="/post-a-job" component={ComingSoon} />
                 <Route render={() => <h1>404</h1>} />

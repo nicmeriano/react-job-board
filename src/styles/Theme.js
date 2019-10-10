@@ -3,6 +3,7 @@ export const Theme = {
   bg: {
     white: '#fff',
     gray: '#f6f6f6',
+    lightgray: '#F9F9F9',
   },
   text: {
     default: {
