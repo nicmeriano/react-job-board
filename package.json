@@ -23,7 +23,7 @@
     "react-router-dom": "^5.1.0",
     "react-scripts": "^3.0.1",
     "styled-components": "^4.4.0",
-    "styled-reset": "^4.0.1"
+    "styled-reset": "^4.4.6"
   },
   "scripts": {
     "start": "react-scripts start",
